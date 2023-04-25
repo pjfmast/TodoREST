@@ -3,52 +3,51 @@ using System.Windows.Input;
 using TodoREST.Models;
 using TodoREST.Services;
 
-namespace TodoREST.ViewModels
+namespace TodoREST.ViewModels;
+
+public class TodoListViewModel : BaseViewModel
 {
-    public class TodoListViewModel : BaseViewModel
+    private readonly ITodoService _todoService;
+
+    public ObservableCollection<TodoItem> Items { get; set; } = new();
+    public ICommand NewCommand { get; set; }
+
+    public ICommand SelectTodoComment { get; set; }
+
+    public TodoListViewModel(ITodoService service)
     {
-        private readonly ITodoService _todoService;
+        _todoService = service;
 
-        public ObservableCollection<TodoItem> Items { get; set; } = new();
-        public ICommand NewCommand { get; set; }
+        Title = "List of todo items";
+        NewCommand = new Command(async () => await AddItem());
+        SelectTodoComment = new Command<TodoItem>(async (item) => await SelectionChanged(item));
+        _ = RefreshTodoItems();
+    }
 
-        public ICommand SelectTodoComment { get; set; }
+    public async Task RefreshTodoItems()
+    {
+        Items.Clear();
+        var tasks = await _todoService.GetTasksAsync();
+        tasks.ForEach(task => Items.Add(task));
+    }
 
-        public TodoListViewModel(ITodoService service)
+    private async Task AddItem()
+    {
+        var navigationParameter = new Dictionary<string, object>
         {
-            _todoService = service;
+            { nameof(TodoItem), new TodoItem { ID = Guid.NewGuid().ToString() } }
+        };
+        await Shell.Current.GoToAsync(nameof(Views.TodoItemPage), navigationParameter);
+    }
 
-            Title = "List of todo items";
-            NewCommand = new Command(async () => await AddItem());
-            SelectTodoComment = new Command<TodoItem>(async (item) => await SelectionChanged(item));
-            _ = RefreshTodoItems();
-        }
+    private async Task SelectionChanged(TodoItem todoItem)
+    {
+        if (todoItem == null) return;
 
-        public async Task RefreshTodoItems()
+        var navigationParameter = new Dictionary<string, object>
         {
-            Items.Clear();
-            var tasks = await _todoService.GetTasksAsync();
-            tasks.ForEach(task => Items.Add(task));
-        }
-
-        private async Task AddItem()
-        {
-            var navigationParameter = new Dictionary<string, object>
-            {
-                { nameof(TodoItem), new TodoItem { ID = Guid.NewGuid().ToString() } }
-            };
-            await Shell.Current.GoToAsync(nameof(Views.TodoItemPage), navigationParameter);
-        }
-
-        private async Task SelectionChanged(TodoItem todoItem)
-        {
-            if (todoItem == null) return;
-
-            var navigationParameter = new Dictionary<string, object>
-            {
-                { nameof(TodoItem), todoItem }
-            };
-            await Shell.Current.GoToAsync(nameof(Views.TodoItemPage), navigationParameter);
-        }
+            { nameof(TodoItem), todoItem }
+        };
+        await Shell.Current.GoToAsync(nameof(Views.TodoItemPage), navigationParameter);
     }
 }
