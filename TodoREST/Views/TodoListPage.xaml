@@ -26,10 +26,12 @@
             <DataTemplate x:DataType="models:TodoItem">
                 <Grid Padding="20,0,0,0"
                       ColumnDefinitions="0.9*, 0.1*">
-                    <Label Text="{Binding Name}" 
+                    <Label x:Name="lblName"
+                           Text="{Binding Name}" 
                            VerticalTextAlignment="Center" />
                     <Image Grid.Column="1"
-                           Scale="0.5"
+                           HeightRequest="{Binding Source={x:Reference lblName},
+                                                   Path=Height}"
                            Source="check.png" 
                            IsVisible="{Binding Done}"
                            HorizontalOptions="End" />

@@ -33,13 +33,14 @@ public class TodoItemViewModel : BaseViewModel
         return false;
     }
 
-    
+
     private TodoItem _todoItem;
 
-		public TodoItem TodoItem
+    public TodoItem TodoItem
     {
         get => _todoItem;
-        set {
+        set
+        {
             _isNewItem = IsNewItem(value);
             _todoItem = value;
             Title = _isNewItem ? "Add new todo item" : "Edit todo item";
