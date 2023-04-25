@@ -5,7 +5,7 @@
              xmlns:vm="clr-namespace:TodoREST.ViewModels"
              xmlns:models="clr-namespace:TodoREST.Models"
              x:DataType="vm:TodoListViewModel"
-             Title="Todo">
+             Title="{Binding Title}">
     <ContentPage.ToolbarItems>
         <ToolbarItem Text="Add Item" Command="{Binding NewCommand}">
             <ToolbarItem.IconImageSource>
@@ -29,6 +29,7 @@
                     <Label Text="{Binding Name}" 
                            VerticalTextAlignment="Center" />
                     <Image Grid.Column="1"
+                           Scale="0.5"
                            Source="check.png" 
                            IsVisible="{Binding Done}"
                            HorizontalOptions="End" />

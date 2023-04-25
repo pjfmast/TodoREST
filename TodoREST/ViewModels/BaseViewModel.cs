@@ -16,8 +16,6 @@ namespace TodoREST.ViewModels
 
         protected bool initialised = false;
 
-        public INavigation Navigation { get; set; }
-
         protected void OnPropertyChanged([CallerMemberName] string propertyName = "")
         {
             var changed = PropertyChanged;

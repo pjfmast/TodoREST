@@ -18,6 +18,7 @@ namespace TodoREST.ViewModels
         {
             _todoService = service;
 
+            Title = "List of todo items";
             NewCommand = new Command(async () => await AddItem());
             SelectTodoComment = new Command<TodoItem>(async (item) => await SelectionChanged(item));
             _ = RefreshTodoItems();
