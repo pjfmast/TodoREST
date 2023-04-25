@@ -1,4 +1,5 @@
 ﻿using TodoREST.Services;
+using TodoREST.ViewModels;
 using TodoREST.Views;
 
 namespace TodoREST;
@@ -21,7 +22,10 @@ public static class MauiProgram
 		builder.Services.AddSingleton<ITodoService, TodoService>();
 
 		builder.Services.AddSingleton<TodoListPage>();
-		builder.Services.AddTransient<TodoItemPage>();
+        builder.Services.AddSingleton<TodoListViewModel>();
+
+        builder.Services.AddTransient<TodoItemPage>();
+		builder.Services.AddTransient<TodoItemViewModel>();
 
 		return builder.Build();
 	}
